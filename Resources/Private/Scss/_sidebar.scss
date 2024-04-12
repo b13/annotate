@@ -1,0 +1,39 @@
+.b_sidebar {
+	&__container {
+		position: relative;
+		z-index: 10000;
+		&--hidden {
+			display: none;
+		}
+	}
+	&__overlay {
+		background-color: rgba(0,0,0,.5);
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 50;
+		transition: opacity 250ms;
+		opacity: 0;
+		&--active {
+			opacity: 1;
+		}
+	}
+	&__content {
+		background-color: #333;
+		color: #fff;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		z-index: 100;
+		width: 400px;
+		padding: 10px 20px;
+		overflow: scroll;
+		transition: right 500ms;
+		right: -400px;
+		&--active {
+			right: 0;
+		}
+	}
+}

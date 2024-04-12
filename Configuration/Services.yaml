@@ -1,0 +1,33 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  B13\Annotate\:
+    resource: '../Classes/*'
+
+  B13\Annotate\Controller\AnnotationController:
+    tags: ['backend.controller']
+
+  B13\Annotate\Hooks\ListModuleHook:
+    public: true
+
+  B13\Annotate\Hooks\Loader:
+    public: true
+
+  B13\Annotate\Hooks\PageHook:
+    public: true
+
+  B13\Annotate\Domain\Repository\BackendUserRepository:
+    public: true
+
+  B13\Annotate\EventListener\ListModule\RenderAdditionalContentToRecordList:
+    public: true
+    tags:
+      - name: event.listener
+
+  B13\Annotate\EventListener\ListModule\ModifyRecordListRecordActions:
+    public: true
+    tags:
+      - name: event.listener

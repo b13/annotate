@@ -1,0 +1,26 @@
+{
+  "name": "annotate",
+  "description": "annotate fe build",
+  "private": true,
+  "version": "0.0.1",
+  "engines": {
+    "node": "11.3.0",
+    "npm": "6.4.1",
+    "yarn": "^1.12.3"
+  },
+  "author": {
+    "name": "b13 GmbH",
+    "email": "info@b13.com",
+    "url": "http://b13.com/"
+  },
+  "scripts": {
+    "build-dev": "node Config/scssBuild.js",
+    "build-prod": "node Config/scssBuild.js"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.7.0",
+    "compressing": "^1.4.0",
+    "node-sass": "^4.13.0",
+    "postcss": "^7.0.21"
+  }
+}
