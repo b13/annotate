@@ -12,11 +12,14 @@ namespace B13\Annotate\EventListener\ListModule;
  * of the License, or any later version.
  */
 
-use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Recordlist\Event\ModifyRecordListRecordActionsEvent;
 
-class ModifyRecordListRecordActions
+/**
+ * @extensionScannerIgnoreFile
+ */
+class ModifyRecordListRecordActions11
 {
     private IconFactory $iconFactory;
 
@@ -30,12 +33,11 @@ class ModifyRecordListRecordActions
         if ($event->getTable() !== 'pages' && $event->getTable() !== 'tt_content') {
             return;
         }
-
-        $action = '<a
-            class="bJS_annotate-list-module__btn-container-' . $event->getTable() . ' b_annotate-list-module__btn-container btn btn-default"
-            data-table="' . $event->getTable() . '"
-            data-uid="' . ($event->getRecord()['uid'] ?? 0) . '"
-        ></a>';
+        $action = '<div class="bJS_annotate-list-module__btn-container-' . $event->getTable() . ' b_annotate-list-module__btn-container">
+                    <a class="btn btn-default bJS_annotate-open-comments" data-table="' . $event->getTable() . '" data-uid="' . ($event->getRecord()['uid'] ?? 0) . '" href="#">' .
+            $this->iconFactory->getIcon('actions-comment', Icon::SIZE_SMALL)->render() .
+            '</a>
+                </div>';
 
         $event->setAction(
             $action,

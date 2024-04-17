@@ -31,3 +31,18 @@ services:
     public: true
     tags:
       - name: event.listener
+
+  B13\Annotate\EventListener\PageModule\ModifyPageLayoutContent:
+    public: true
+    tags:
+      - name: event.listener
+
+  B13\Annotate\EventListener\ListModule\RenderAdditionalContentToRecordList11:
+    public: true
+    tags:
+      - name: event.listener
+
+  B13\Annotate\EventListener\ListModule\ModifyRecordListRecordActions11:
+    public: true
+    tags:
+      - name: event.listener

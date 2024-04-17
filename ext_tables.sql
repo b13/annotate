@@ -7,5 +7,6 @@ CREATE TABLE sys_comment (
     recorduid int(11) DEFAULT 0 NOT NULL,
     parentcomment int(11) DEFAULT 0 NOT NULL,
     assignedto int(11) DEFAULT 0 NOT NULL,
+    author int(11) DEFAULT 0 NOT NULL,
     last_edit int(11) DEFAULT 0 NOT NULL
 );
