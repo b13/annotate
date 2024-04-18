@@ -38,7 +38,6 @@ class Sidebar {
 	 * @param $content
 	 */
 	show($content = null) {
-		console.log($content);
 		if (!$content) {
 			return;
 		}

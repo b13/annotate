@@ -145,7 +145,7 @@ class AnnotationContainer {
 			buttonGroup.dataset.moduleType = moduleType;
 
 
-			this.bindOpenCommentLayer(buttonGroup, uid, table, comments);
+			this.bindOpenCommentLayer(buttonGroup, uid, table, comments, true);
 		});
 	}
 
@@ -157,7 +157,7 @@ class AnnotationContainer {
 	 * @param {string} table
 	 * @param {Array} comments
 	 */
-	bindOpenCommentLayer($elem, uid, table, comments) {
+	bindOpenCommentLayer($elem, uid, table, comments, inline = false) {
 		if (!$elem) {
 			return;
 		}
@@ -174,7 +174,7 @@ class AnnotationContainer {
 		});
 
 		$contentEl.addEventListener("commentsChanged", evt => {
-			this.updateSidebarContent($elem, table, uid, $contentEl);
+			this.updateSidebarContent($elem, table, uid, $contentEl, inline);
 		});
 	}
 
@@ -186,7 +186,7 @@ class AnnotationContainer {
 	 * @param $content
 	 * @return {Promise}
 	 */
-	updateSidebarContent($elem, table, uid, $content) {
+	updateSidebarContent($elem, table, uid, $content, inline = false) {
 		return new Promise((resolve, reject) => {
 			if (!table || !uid || !$content) {
 				reject();
@@ -194,11 +194,14 @@ class AnnotationContainer {
 			}
 			this.fetchCommentsByRecordTableAndRecordId(table, uid)
 				.then(comments => {
-					$content.innerHtml = '';
 					if ($elem.dataset.moduleType === 'list') {
 						render(this.commentsModal.renderOpenCommentsListButton(uid, table, comments.length), $elem);
 					} else {
-						render(this.commentsModal.renderOpenCommentsButton(uid, table, comments.length), $elem);
+						if (inline) {
+							// inline buttons need to be removed to avoid duplicates
+							$elem.innerHTML = '';
+						}
+						render(this.commentsModal.renderOpenCommentsButton(uid, table, comments.length, inline), $elem);
 					}
 					render(this.commentsModal.render(this.pid, uid, table, comments), $content);
 					resolve($content);
