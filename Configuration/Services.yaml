@@ -46,3 +46,17 @@ services:
     public: true
     tags:
       - name: event.listener
+
+  dashboard.widget.annotate:
+    class: B13\Annotate\Widget\CommentsWidget
+    arguments:
+      $view: '@dashboard.views.widget'
+    tags:
+      - name: dashboard.widget
+        identifier: annotate
+        title: Pages with comments
+        description: Show pages with Comments
+        groupNames: general
+        iconIdentifier: actions-comment
+        height: medium
+        width: medium
