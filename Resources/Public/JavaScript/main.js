@@ -47,7 +47,12 @@ class AnnotationContainer {
 			this.fetchCommentsOnPageByRecordTable('pages').then(comments => this.initPageComments(comments));
 			this.fetchCommentsOnPageByRecordTable('tt_content').then((comments) => {
 				// add comment buttons to all tt_content items
-				this.initInlineComments(comments, document.querySelectorAll('.t3-page-ce-header .t3-page-ce-header-right .btn-group'), 'page');
+				document.querySelectorAll('.t3-page-ce-header .t3-page-ce-header-right .btn-group').forEach(buttonGroup => {
+					const button = document.createElement('button');
+					button.classList.add('btn', 'btn-borderless', 'bJS_annotate_btn-container');
+					buttonGroup.prepend(button);
+				});
+				this.initInlineComments(comments, document.querySelectorAll('.t3-page-ce-header .t3-page-ce-header-right .btn-group .bJS_annotate_btn-container'), 'page');
 
 				const itemsWithCommentsCount = new Set();
 				comments.forEach(comment => itemsWithCommentsCount.add(comment.recorduid));
