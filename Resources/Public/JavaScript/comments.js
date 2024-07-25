@@ -1,13 +1,13 @@
 import Icons from '@typo3/backend/icons.js';
 import Modal from '@typo3/backend/modal.js';
 import Severity from '@typo3/backend/severity.js';
-import Notification from "@typo3/backend/notification.js";
 import {html, render} from 'lit-html';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 class CommentsModal {
 
 	me = self;
+	sidebar = null;
 	icons = {
 		reply : '',
 		resolve : '',
@@ -15,7 +15,8 @@ class CommentsModal {
 		open: ''
 	};
 
-	constructor() {
+	constructor(sidebar) {
+		this.sidebar = sidebar;
 		Icons.getIcon('actions-edit-replace', 'small').then(icon => this.icons.reply = icon);
 		Icons.getIcon('actions-check', 'small').then(icon => this.icons.resolve = icon);
 		Icons.getIcon('actions-comment', 'small').then(icon => this.icons.comment = icon);
@@ -264,18 +265,18 @@ class CommentsModal {
 		if (parentComment > 0) {
 			this.hideReplyForm(evt.target.closest('.b_annotate__comment'));
 		}
+		this.sidebar.hide();
 	}
 
 	createComment(evt) {
 		evt.preventDefault();
 		const formData = new URLSearchParams();
-		for (const pair of new FormData(evt.target)) {
-			formData.append(pair[0], pair[1]);
+		for (const keyValuePair of new FormData(evt.target)) {
+			formData.append(keyValuePair[0], keyValuePair[1]);
 		}
 
 		this.sendRequest(window.TYPO3.settings.ajaxUrls['annotate_add_comment'], formData)
 			.then(() => {
-				Notification.success('Success', 'Comment was successfully created');
 				evt.target.querySelector('textarea').value = '';
 				evt.target.dispatchEvent(new CustomEvent('commentsChanged', {bubbles: true}));
 			});
@@ -291,7 +292,6 @@ class CommentsModal {
 
 		this.sendRequest(window.TYPO3.settings.ajaxUrls['annotate_update_comment'], formData)
 			.then(() => {
-				Notification.success('Success', 'Comment was successfully updated');
 				evt.target.dispatchEvent(new CustomEvent('commentsChanged', {bubbles: true}));
 				this.hideEditForm(evt.target.closest('.b_annotate__comment'));
 			});

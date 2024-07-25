@@ -12,8 +12,8 @@ class AnnotationContainer {
 	context = '';
 	buttonStyle = '';
 	pid = 0;
-	commentsModal = new CommentsModal();
 	sidebar = new Sidebar();
+	commentsModal = new CommentsModal(this.sidebar);
 
 	setContext(context) {
 		this.context = context;
@@ -35,10 +35,15 @@ class AnnotationContainer {
 
 	initialize() {
 
-		const
+		let
 			mainPageBtnContainer = document.getElementById('bJS_annotate-comments'),
-			moduleType = mainPageBtnContainer.dataset.moduleType;
+			moduleType = null;
 
+		if (mainPageBtnContainer === null) {
+			return;
+		}
+
+		moduleType = mainPageBtnContainer.dataset.moduleType;
 		this.pid = mainPageBtnContainer.dataset.pid;
 		/**
 		 * page module
@@ -83,11 +88,13 @@ class AnnotationContainer {
 		/**
 		 * custom module
 		 */
-		if (moduleType === 'custom') {
-			AnnotationContainer.customModuleCallback(CommentsModal);
-		}
+		// initialize with initCustomModule() after setting customModuleCallback
 
 		return self;
+	}
+
+	initCustomModule() {
+		this.customModuleCallback(this.commentsModal);
 	}
 
 	/**
@@ -97,7 +104,7 @@ class AnnotationContainer {
 	 */
 	initPageComments(comments) {
 		const
-			pageButton = document.createElement('a'),
+			pageButton = document.createElement('span'),
 			uid = this.pid,
 			table = 'pages';
 
@@ -197,10 +204,11 @@ class AnnotationContainer {
 					if ($elem.dataset.moduleType === 'list') {
 						render(this.commentsModal.renderOpenCommentsListButton(uid, table, comments.length), $elem);
 					} else {
-						if (inline) {
+						if (inline || $elem.dataset.moduleType !== 'page') {
 							// inline buttons need to be removed to avoid duplicates
 							$elem.innerHTML = '';
 						}
+
 						render(this.commentsModal.renderOpenCommentsButton(uid, table, comments.length, inline), $elem);
 					}
 					render(this.commentsModal.render(this.pid, uid, table, comments), $content);
