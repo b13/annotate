@@ -6,6 +6,8 @@ namespace B13\Annotate\Domain\Repository;
 
 use B13\Annotate\Domain\Model\BackendUser;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendUserRepository
 {
@@ -19,7 +21,7 @@ class BackendUserRepository
     public function findByUid(int $uid): ?BackendUser
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('be_users');
-        $beUserRow = $queryBuilder->select('username', 'realname')
+        $stm = $queryBuilder->select('username', 'realname')
             ->from('be_users')
             ->where(
                 $queryBuilder->expr()->eq(
@@ -27,9 +29,15 @@ class BackendUserRepository
                     $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
                 )
             )
-            ->setMaxResults(1)
-            ->execute()
-            ->fetchAssociative();
+            ->setMaxResults(1);
+
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() >= 12) {
+            $stm = $stm->executeQuery();
+        } else {
+            $stm = $stm->execute();
+        }
+
+        $beUserRow = $stm->fetchAssociative();
 
         if (empty($beUserRow)) {
             return null;

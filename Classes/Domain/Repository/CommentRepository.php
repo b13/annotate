@@ -16,6 +16,7 @@ use B13\Annotate\Domain\Model\Comment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CommentRepository
@@ -56,7 +57,11 @@ class CommentRepository
                 $queryBuilder->expr()->eq('recordtable', $queryBuilder->createNamedParameter($recordtable))
             );
         }
-        return (int)($queryBuilder->execute()->fetchOne());
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() >= 12) {
+            return (int)($queryBuilder->executeQuery()->fetchOne());
+        } else {
+            return (int)($queryBuilder->execute()->fetchOne());
+        }
     }
 
     /** @return Comment[] */
@@ -80,16 +85,25 @@ class CommentRepository
             $queryBuilder->expr()->eq('recordtable', $queryBuilder->createNamedParameter($recordtable))
         );
 
-        return (int)($queryBuilder->execute()->fetchOne());
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() >= 12) {
+            return (int)($queryBuilder->executeQuery()->fetchOne());
+        } else {
+            return (int)($queryBuilder->execute()->fetchOne());
+        }
     }
 
     public function findByUid(int $uid): ?Comment
     {
         $queryBuilder = $this->createPreparedQueryBuilder();
-        $row = $queryBuilder->where(
+        $stm = $queryBuilder->where(
             $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
-        )
-        ->execute()->fetchAssociative();
+        );
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() >= 12) {
+            $row = $stm->executeQuery()->fetchAssociative();
+        } else {
+            $row = $stm->execute()->fetchAssociative();
+        }
+
         if (empty($row)) {
             return null;
         }
@@ -157,7 +171,11 @@ class CommentRepository
     /** @return Comment[] */
     protected function fetchComments(QueryBuilder $queryBuilder): array
     {
-        $stmt = $queryBuilder->execute();
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() >= 12) {
+            $stmt = $queryBuilder->executeQuery();
+        } else {
+            $stmt = $queryBuilder->execute();
+        }
         $comments = [];
         while ($row = $stmt->fetchAssociative()) {
             $parentComment = (int)$row['parentcomment'];
