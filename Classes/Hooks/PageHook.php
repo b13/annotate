@@ -24,6 +24,9 @@ class PageHook
 
     public function renderInHeader(array $params, PageLayoutController $controller): string
     {
+        if ($GLOBALS['BE_USER']->check('custom_options', 'tx_annotate:allow') === false) {
+            return '';
+        }
         if ($controller->id) {
             $this->loader->add((int)$controller->id);
         }

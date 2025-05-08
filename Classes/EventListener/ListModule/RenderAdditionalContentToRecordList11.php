@@ -28,6 +28,9 @@ class RenderAdditionalContentToRecordList11
 
     public function __invoke(RenderAdditionalContentToRecordListEvent $event): void
     {
+        if ($GLOBALS['BE_USER']->check('custom_options', 'tx_annotate:allow') === false) {
+            return;
+        }
         if ($event->getRequest()->getQueryParams()['id']) {
             $this->loader->add((int)$event->getRequest()->getQueryParams()['id']);
         }

@@ -30,7 +30,10 @@ class ModifyRecordListRecordActions11
 
     public function __invoke(ModifyRecordListRecordActionsEvent $event): void
     {
-        if ($event->getTable() !== 'pages' && $event->getTable() !== 'tt_content') {
+        if (
+            $GLOBALS['BE_USER']->check('custom_options', 'tx_annotate:allow') === false ||
+            ($event->getTable() !== 'pages' && $event->getTable() !== 'tt_content')
+        ) {
             return;
         }
         $action = '<div class="bJS_annotate-list-module__btn-container-' . $event->getTable() . ' b_annotate-list-module__btn-container">

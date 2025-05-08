@@ -26,6 +26,9 @@ class RenderAdditionalContentToRecordList
 
     public function __invoke(RenderAdditionalContentToRecordListEvent $event): void
     {
+        if ($GLOBALS['BE_USER']->check('custom_options', 'tx_annotate:allow') === false) {
+            return;
+        }
         $id = (int)($event->getRequest()->getQueryParams()['id'] ?? 0);
 
         $this->pageRenderer->addCssFile('EXT:annotate/Resources/Public/Css/main.css');
