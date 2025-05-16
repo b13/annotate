@@ -12,21 +12,25 @@ namespace B13\Annotate\EventListener\PageModule;
  * of the License, or any later version.
  */
 
+use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Page\PageRenderer;
 
 class ModifyPageLayoutContent
 {
     private PageRenderer $pageRenderer;
+    private PermissionService $permissionService;
 
-    public function __construct(PageRenderer $pageRenderer)
+    public function __construct(PageRenderer $pageRenderer, PermissionService $permissionService)
     {
         $this->pageRenderer = $pageRenderer;
+        $this->permissionService = $permissionService;
     }
 
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
-        if ($GLOBALS['BE_USER']->check('custom_options', 'tx_annotate:allow') === false) {
+        if (!$this->permissionService->isAllowed()) {
             return;
         }
         $id = (int)($event->getRequest()->getQueryParams()['id'] ?? 0);

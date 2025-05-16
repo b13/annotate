@@ -13,6 +13,7 @@ namespace B13\Annotate\EventListener\ListModule;
  */
 
 use B13\Annotate\Hooks\Loader;
+use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Recordlist\Event\RenderAdditionalContentToRecordListEvent;
 
 /**
@@ -21,14 +22,17 @@ use TYPO3\CMS\Recordlist\Event\RenderAdditionalContentToRecordListEvent;
 class RenderAdditionalContentToRecordList11
 {
     protected Loader $loader;
-    public function __construct(Loader $loader)
+    private PermissionService $permissionService;
+
+    public function __construct(Loader $loader, PermissionService $permissionService)
     {
         $this->loader = $loader;
+        $this->permissionService = $permissionService;
     }
 
     public function __invoke(RenderAdditionalContentToRecordListEvent $event): void
     {
-        if ($GLOBALS['BE_USER']->check('custom_options', 'tx_annotate:allow') === false) {
+        if (!$this->permissionService->isAllowed()) {
             return;
         }
         if ($event->getRequest()->getQueryParams()['id']) {
