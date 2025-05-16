@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace B13\Annotate\Controller;
 
 /*
@@ -20,26 +21,15 @@ use B13\Annotate\Event\CommentHasBeenResolvedEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Http\JsonResponse;
 
 class AnnotationController
 {
-    protected CommentRepository $commentRepository;
-    protected Context $context;
-    protected CommentFactory $commentFactory;
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        Context $context,
-        CommentRepository $commentRepository,
-        CommentFactory $commentFactory,
-        EventDispatcherInterface $eventDispatcher
+        protected readonly CommentRepository $commentRepository,
+        protected readonly CommentFactory $commentFactory,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
-        $this->context = $context;
-        $this->commentRepository = $commentRepository;
-        $this->commentFactory = $commentFactory;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getCommentsForPageAction(ServerRequestInterface $request): ResponseInterface

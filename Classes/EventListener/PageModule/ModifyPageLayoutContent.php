@@ -14,18 +14,14 @@ namespace B13\Annotate\EventListener\PageModule;
 
 use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Page\PageRenderer;
 
 class ModifyPageLayoutContent
 {
-    private PageRenderer $pageRenderer;
-    private PermissionService $permissionService;
-
-    public function __construct(PageRenderer $pageRenderer, PermissionService $permissionService)
-    {
-        $this->pageRenderer = $pageRenderer;
-        $this->permissionService = $permissionService;
+    public function __construct(
+        private readonly PageRenderer $pageRenderer,
+        private readonly PermissionService $permissionService
+    ) {
     }
 
     public function __invoke(ModifyPageLayoutContentEvent $event): void

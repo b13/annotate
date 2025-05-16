@@ -10,9 +10,6 @@ services:
   B13\Annotate\Controller\AnnotationController:
     tags: ['backend.controller']
 
-  B13\Annotate\Hooks\ListModuleHook:
-    public: true
-
   B13\Annotate\Domain\Repository\BackendUserRepository:
     public: true
 
