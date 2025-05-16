@@ -11,19 +11,25 @@ namespace B13\Annotate\Hooks;
  * of the License, or any later version.
  */
 
+use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Backend\Controller\PageLayoutController;
 
 class PageHook
 {
     protected Loader $loader;
+    protected PermissionService $permissionService;
 
-    public function __construct(Loader $loader)
+    public function __construct(Loader $loader, PermissionService $permissionService)
     {
         $this->loader = $loader;
+        $this->permissionService = $permissionService;
     }
 
     public function renderInHeader(array $params, PageLayoutController $controller): string
     {
+        if (!$this->permissionService->isAllowed()) {
+            return '';
+        }
         if ($controller->id) {
             $this->loader->add((int)$controller->id);
         }

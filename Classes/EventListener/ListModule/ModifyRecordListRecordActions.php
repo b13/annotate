@@ -12,6 +12,7 @@ namespace B13\Annotate\EventListener\ListModule;
  * of the License, or any later version.
  */
 
+use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -19,15 +20,20 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 class ModifyRecordListRecordActions
 {
     private IconFactory $iconFactory;
+    private PermissionService $permissionService;
 
-    public function __construct(IconFactory $iconFactory)
+    public function __construct(IconFactory $iconFactory, PermissionService $permissionService)
     {
         $this->iconFactory = $iconFactory;
+        $this->permissionService = $permissionService;
     }
 
     public function __invoke(ModifyRecordListRecordActionsEvent $event): void
     {
-        if ($event->getTable() !== 'pages' && $event->getTable() !== 'tt_content') {
+        if (
+            !$this->permissionService->isAllowed() ||
+            ($event->getTable() !== 'pages' && $event->getTable() !== 'tt_content')
+        ) {
             return;
         }
 
