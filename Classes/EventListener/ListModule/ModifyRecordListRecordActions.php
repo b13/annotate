@@ -14,18 +14,12 @@ namespace B13\Annotate\EventListener\ListModule;
 
 use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
-use TYPO3\CMS\Core\Imaging\Icon;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 
 class ModifyRecordListRecordActions
 {
-    private IconFactory $iconFactory;
-    private PermissionService $permissionService;
-
-    public function __construct(IconFactory $iconFactory, PermissionService $permissionService)
-    {
-        $this->iconFactory = $iconFactory;
-        $this->permissionService = $permissionService;
+    public function __construct(
+        private readonly PermissionService $permissionService
+    ) {
     }
 
     public function __invoke(ModifyRecordListRecordActionsEvent $event): void

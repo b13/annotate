@@ -10,15 +10,6 @@ services:
   B13\Annotate\Controller\AnnotationController:
     tags: ['backend.controller']
 
-  B13\Annotate\Hooks\ListModuleHook:
-    public: true
-
-  B13\Annotate\Hooks\Loader:
-    public: true
-
-  B13\Annotate\Hooks\PageHook:
-    public: true
-
   B13\Annotate\Domain\Repository\BackendUserRepository:
     public: true
 
@@ -33,16 +24,6 @@ services:
       - name: event.listener
 
   B13\Annotate\EventListener\PageModule\ModifyPageLayoutContent:
-    public: true
-    tags:
-      - name: event.listener
-
-  B13\Annotate\EventListener\ListModule\RenderAdditionalContentToRecordList11:
-    public: true
-    tags:
-      - name: event.listener
-
-  B13\Annotate\EventListener\ListModule\ModifyRecordListRecordActions11:
     public: true
     tags:
       - name: event.listener

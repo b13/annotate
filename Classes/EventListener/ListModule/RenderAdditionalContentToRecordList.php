@@ -18,13 +18,10 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 
 class RenderAdditionalContentToRecordList
 {
-    private PageRenderer $pageRenderer;
-    private PermissionService $permissionService;
-
-    public function __construct(PageRenderer $pageRenderer, PermissionService $permissionService)
-    {
-        $this->pageRenderer = $pageRenderer;
-        $this->permissionService = $permissionService;
+    public function __construct(
+        private readonly PageRenderer $pageRenderer,
+        private readonly PermissionService $permissionService
+    ) {
     }
 
     public function __invoke(RenderAdditionalContentToRecordListEvent $event): void

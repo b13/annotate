@@ -17,13 +17,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class CommentHasBeenCreatedEvent
 {
-    private Comment $comment;
-    private ServerRequestInterface $request;
-
-    public function __construct(Comment $comment, ServerRequestInterface $request)
-    {
-        $this->comment = $comment;
-        $this->request = $request;
+    public function __construct(
+        private readonly Comment $comment,
+        private readonly ServerRequestInterface $request
+    ) {
     }
 
     public function getComment(): Comment
