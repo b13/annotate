@@ -61,5 +61,14 @@ return [
                 'min' => 0,
             ],
         ],
+        'author' => [
+            'label' => 'Author',
+            'config' => [
+                'type' => 'group',
+                'allowed' => 'be_users',
+                'max' => 1,
+                'min' => 0,
+            ],
+        ],
     ],
 ];

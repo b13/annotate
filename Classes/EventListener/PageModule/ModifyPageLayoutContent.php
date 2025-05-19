@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace B13\Annotate\EventListener\ListModule;
+namespace B13\Annotate\EventListener\PageModule;
 
 /*
  * This file is part of TYPO3 CMS-based extension "annotate" by b13.
@@ -13,10 +13,10 @@ namespace B13\Annotate\EventListener\ListModule;
  */
 
 use B13\Annotate\Service\PermissionService;
-use TYPO3\CMS\Backend\Controller\Event\RenderAdditionalContentToRecordListEvent;
+use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
 use TYPO3\CMS\Core\Page\PageRenderer;
 
-class RenderAdditionalContentToRecordList
+class ModifyPageLayoutContent
 {
     public function __construct(
         private readonly PageRenderer $pageRenderer,
@@ -24,7 +24,7 @@ class RenderAdditionalContentToRecordList
     ) {
     }
 
-    public function __invoke(RenderAdditionalContentToRecordListEvent $event): void
+    public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
         if (!$this->permissionService->isAllowed()) {
             return;
@@ -34,10 +34,8 @@ class RenderAdditionalContentToRecordList
         $this->pageRenderer->addCssFile('EXT:annotate/Resources/Public/Css/main.css');
         $this->pageRenderer->loadJavaScriptModule('@b13/annotate/main.js');
 
-        $this->pageRenderer->loadJavaScriptModule('@b13/annotate/main.js');
-
-        $event->addContentAbove(
-            '<div id="bJS_annotate-comments" data-pid="' . $id . '" data-module-type="list" class="b_annotate-comments-page__container"><div id="bJS_annotate-comments-page__info" class="b_annotate-comments-page__info"></div></div>'
+        $event->addHeaderContent(
+            '<div id="bJS_annotate-comments" data-pid="' . $id . '" data-module-type="page" class="b_annotate-comments-page__container"><div id="bJS_annotate-comments-page__info" class="b_annotate-comments-page__info"></div></div>'
         );
     }
 }

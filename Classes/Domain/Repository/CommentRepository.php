@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace B13\Annotate\Domain\Repository;
 
 /*
@@ -13,6 +14,7 @@ namespace B13\Annotate\Domain\Repository;
 
 use B13\Annotate\Domain\Factory\CommentFactory;
 use B13\Annotate\Domain\Model\Comment;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -20,11 +22,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CommentRepository
 {
-    protected CommentFactory $commentFactory;
-
-    public function __construct(CommentFactory $commentFactory)
-    {
-        $this->commentFactory = $commentFactory;
+    public function __construct(
+        protected readonly CommentFactory $commentFactory
+    ) {
     }
 
     /** @return Comment[] */
@@ -32,7 +32,7 @@ class CommentRepository
     {
         $queryBuilder = $this->createPreparedQueryBuilder();
         $queryBuilder->where(
-            $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT))
+            $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pageId, ParameterType::INTEGER))
         );
         if (!empty($recordtable)) {
             $queryBuilder->andWhere(
@@ -49,14 +49,14 @@ class CommentRepository
             ->count('*')
             ->from('sys_comment');
         $queryBuilder->where(
-            $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT))
+            $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pageId, ParameterType::INTEGER))
         );
         if (!empty($recordtable)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->eq('recordtable', $queryBuilder->createNamedParameter($recordtable))
             );
         }
-        return (int)($queryBuilder->execute()->fetchOne());
+        return (int)($queryBuilder->executeQuery()->fetchOne());
     }
 
     /** @return Comment[] */
@@ -76,20 +76,22 @@ class CommentRepository
             ->count('*')
             ->from('sys_comment');
         $queryBuilder->where(
-            $queryBuilder->expr()->eq('recorduid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)),
+            $queryBuilder->expr()->eq('recorduid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)),
             $queryBuilder->expr()->eq('recordtable', $queryBuilder->createNamedParameter($recordtable))
         );
-
-        return (int)($queryBuilder->execute()->fetchOne());
+        return (int)($queryBuilder->executeQuery()->fetchOne());
     }
 
     public function findByUid(int $uid): ?Comment
     {
         $queryBuilder = $this->createPreparedQueryBuilder();
-        $row = $queryBuilder->where(
-            $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
-        )
-        ->execute()->fetchAssociative();
+        $row = $queryBuilder
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER))
+            )
+            ->executeQuery()
+            ->fetchAssociative();
+
         if (empty($row)) {
             return null;
         }
@@ -105,7 +107,7 @@ class CommentRepository
     {
         $queryBuilder = $this->createPreparedQueryBuilder();
         $queryBuilder->where(
-            $queryBuilder->expr()->eq('recorduid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)),
+            $queryBuilder->expr()->eq('recorduid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)),
             $queryBuilder->expr()->eq('recordtable', $queryBuilder->createNamedParameter($recordtable))
         );
         return $this->fetchComments($queryBuilder);
@@ -157,7 +159,7 @@ class CommentRepository
     /** @return Comment[] */
     protected function fetchComments(QueryBuilder $queryBuilder): array
     {
-        $stmt = $queryBuilder->execute();
+        $stmt = $queryBuilder->executeQuery();
         $comments = [];
         while ($row = $stmt->fetchAssociative()) {
             $parentComment = (int)$row['parentcomment'];

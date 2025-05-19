@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace B13\Annotate\Domain\Model;
 
 /*
@@ -109,7 +110,7 @@ class Comment implements \JsonSerializable
             $this->assignedto = $assignedTo;
         }
 
-        if ($lastEdit !== null) {
+        if ($lastEdit !== null && $lastEdit > 0) {
             $this->lastEdit = new \DateTime();
             $this->lastEdit->setTimestamp($lastEdit);
         }
