@@ -59,6 +59,15 @@ class CommentRepository
         return (int)($queryBuilder->executeQuery()->fetchOne());
     }
 
+    public function findAllUnresolved(): array
+    {
+        $queryBuilder = $this->createPreparedQueryBuilder();
+        $queryBuilder->where(
+            $queryBuilder->expr()->eq('isresolved', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER))
+        );
+        return $this->fetchComments($queryBuilder);
+    }
+
     /** @return Comment[] */
     public function findAllCommentsForRecordtable(string $recordtable): array
     {
