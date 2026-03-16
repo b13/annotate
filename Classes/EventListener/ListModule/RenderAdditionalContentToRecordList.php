@@ -34,8 +34,6 @@ class RenderAdditionalContentToRecordList
         $this->pageRenderer->addCssFile('EXT:annotate/Resources/Public/Css/main.css');
         $this->pageRenderer->loadJavaScriptModule('@b13/annotate/main.js');
 
-        $this->pageRenderer->loadJavaScriptModule('@b13/annotate/main.js');
-
         $event->addContentAbove(
             '<div id="bJS_annotate-comments" data-pid="' . $id . '" data-module-type="list" class="b_annotate-comments-page__container"><div id="bJS_annotate-comments-page__info" class="b_annotate-comments-page__info"></div></div>'
         );
