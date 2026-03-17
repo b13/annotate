@@ -14,12 +14,9 @@ namespace B13\Annotate\EventListener\ListModule;
 
 use B13\Annotate\Service\PermissionService;
 use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
-use TYPO3\CMS\Backend\Template\Components\ActionGroup;
-use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ModifyRecordListRecordActions
+class LegacyModifyRecordListRecordActions
 {
     public function __construct(
         private readonly PermissionService $permissionService
@@ -28,27 +25,26 @@ class ModifyRecordListRecordActions
 
     public function __invoke(ModifyRecordListRecordActionsEvent $event): void
     {
-        if ((new Typo3Version())->getMajorVersion() < 14) {
+        if ((new Typo3Version())->getMajorVersion() > 13) {
             return;
         }
         if (
             !$this->permissionService->isAllowed() ||
-            ($event->getRecord()->getMainType() !== 'pages' && $event->getRecord()->getMainType() !== 'tt_content')
+            ($event->getTable() !== 'pages' && $event->getTable() !== 'tt_content')
         ) {
             return;
         }
 
-        $componentFactory = GeneralUtility::makeInstance(ComponentFactory::class);
-        $component = $componentFactory->createGenericButton()
-            ->setClasses('bJS_annotate-list-module__btn-container-' . $event->getRecord()->getMainType() . ' b_annotate-list-module__btn-container btn btn-default')
-            ->setAttributes([
-                'data-table' => $event->getRecord()->getMainType(),
-                'data-uid' => $event->getRecord()->getUid()
-            ]);
+        $action = '<a
+            class="bJS_annotate-list-module__btn-container-' . $event->getTable() . ' b_annotate-list-module__btn-container btn btn-default"
+            data-table="' . $event->getTable() . '"
+            data-uid="' . ($event->getRecord()['uid'] ?? 0) . '"
+        ></a>';
+
         $event->setAction(
-            $component,
+            $action,
             'annotate',
-            ActionGroup::primary,
+            'primary',
             '',
             'delete'
         );
