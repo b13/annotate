@@ -1,13 +1,17 @@
 {
 	"name": "b13/annotate",
 	"type": "typo3-cms-extension",
-	"description": "Main extension for providing record-based annotations",
+	"description": "Annotate and commenting system - Main extension for providing record-based annotations",
 	"require": {
-		"typo3/cms-core": "^12.4 || ^13.4 || ^14.1 || ^14.2.x-dev"
+		"typo3/cms-core": "^12.4 || ^13.4 || ^14.3"
 	},
 	"extra": {
 		"typo3/cms": {
-			"extension-key": "annotate"
+			"extension-key": "annotate",
+			"version": "1.2.0",
+			"Package": {
+				"providesPackages": {}
+			}
 		}
 	},
 	"autoload": {
