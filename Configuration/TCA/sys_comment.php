@@ -10,6 +10,9 @@ return [
         'hideTable' => true,
         'rootLevel' => -1,
         'iconfile' => 'EXT:annotate/Resources/Public/Icons/Extension.png',
+        'security' => [
+            'ignorePageTypeRestriction' => true,
+        ],
     ],
     'types' => [
         1 => [
